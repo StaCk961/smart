@@ -1,0 +1,388 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css?v=34">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>Payment Info</h1>
+
+        <h2 id="instructor"></h2>
+
+
+        <img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+
+
+        <label for="name" class="col-lg-2 control-label">(device Id) Address</label>
+        <input id="name" type="text">
+
+        <label for="name" class="col-lg-2 control-label">payment value</label>
+        <input id="age" type="text">
+
+        <button id="button">Get your coffee</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       // Our future code here..
+
+  if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+           // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            web3 = new Web3(new Web3.providers.HttpProvider("http://922e6a77.ngrok.io")); // mine
+           // web3 = new Web3(new Web3.providers.HttpProvider("http://563ba920.ngrok.io")); // elias
+
+        }
+
+
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+
+
+        var CoursetroContract = web3.eth.contract([
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "deviceId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "duration",
+          "type": "uint256"
+        }
+      ],
+      "name": "Enable",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "sendCoin",
+      "outputs": [
+        {
+          "name": "sufficient",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getBalanceInEth",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "name": "deviceId",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerDevice",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "deviceId",
+          "type": "uint256"
+        },
+        {
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "enableDevice",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getDevices",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "countDevices",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getSenderAddress",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]);
+
+
+
+
+
+
+
+// without event
+/*
+
+
+        var CoursetroContract = web3.eth.contract([
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_fName",
+                "type": "string"
+            },
+            {
+                "name": "_age",
+                "type": "uint256"
+            }
+        ],
+        "name": "setInstructor",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getInstructor",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]);
+
+
+
+*/
+
+
+      //  var Contractaddress = '0xc210dbd1d48f4ff1acf37ca5a3eae9f5693bb8e3';
+        var Contractaddress = '0x461a4193a097218c05d09506251618dd47edb0f1';
+
+        var Coursetro = CoursetroContract.at(Contractaddress);
+
+
+        console.log(Coursetro);
+
+
+
+
+   // for web view
+
+/*
+         Coursetro.getInstructor(function(error, result){
+            if(!error)
+                {
+                    $("#instructor").html(result[0]+' received ('+result[1]+' ldn)');
+                    console.log(result);
+                }
+            else
+                console.error(error);
+        });
+
+
+*/
+
+
+
+         // this code should be run on raspberry
+
+
+        // var instructorEvent = Coursetro.Instructor();
+         var instructorEvent = Coursetro.Enable();
+
+         instructorEvent.watch(function(error, result){
+            if (!error)
+                {
+                    $("#loader").hide();
+                    $("#instructor").html(result.args.deviceId + ' received (' + result.args.duration + ' ldn )');
+
+                    console.log("hide loader and done payment");
+                    console.log(result.args.deviceId);
+                    console.log(result.args.duration);
+
+
+                } else {
+                    $("#loader").hide();
+                    console.log(error);
+                }
+        });
+
+
+
+
+
+
+        $("#button").click(function() {
+
+            //Coursetro.setInstructor($("#name").val(), $("#age").val());
+            Coursetro.enableDevice($("#name").val(), $("#age").val());
+            console.log("clicked");
+
+             $("#loader").show();
+        });
+
+
+
+
+
+    </script>
+
+</body>
+</html>
